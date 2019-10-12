@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import CourseInfo from './courseinfo/CourseInfo';
+import CourseInfo from './courseinfo';
 import Anecdotes from './anecdotes/Anecdotes';
 import { BrowserRouter, Route } from "react-router-dom";
 import UniCafe from './unicafe/UniCafe';
