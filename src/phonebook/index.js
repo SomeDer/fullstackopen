@@ -1,14 +1,11 @@
 import React, {useState, useEffect} from "react";
 import PhonebookForm from './PhonebookForm';
 import Search from './Search';
-import Axios from 'axios';
+import {getContacts} from './Backend';
+import Contact from './Contact';
 
 const Phonebook = () => {
   const [contacts, setContacts] =  useState([]);
-  const addContact = (name, number) => setContacts(cs => cs.concat({
-    name,
-    number
-  }));
   const [searching, setSearching] = useState("")
   const searchResults = 
     contacts.filter(c => 
@@ -16,19 +13,18 @@ const Phonebook = () => {
        .toLowerCase()
        .includes(searching.toLowerCase())
     );
+  const update = () => getContacts().then(c => setContacts(c.data));
   useEffect(() => {
-    Axios
-      .get("http://localhost:3001/contacts")
-      .then(c => setContacts(c.data))
+    update();
   }, []);
   return (
     <div>
       <h1>Phonebook</h1>
       <Search {...{searching, setSearching}} />
       <h2>Add</h2>
-      <PhonebookForm {...{contacts, addContact}} />
+      <PhonebookForm {...{contacts, update}} />
       <h2>Contacts</h2>
-      {searchResults.map(c => <p>{c.name} {c.number}</p>)}
+      {searchResults.map(({name, number, id}) => <Contact key={id} {...{name, number, id, update}} />)}
     </div>
   );
 };

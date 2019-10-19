@@ -1,17 +1,20 @@
 import React, {useState} from "react";
 import FormItem from './FormItem';
+import {postContact, patchNumber} from './Backend';
 
-const PhonebookForm = ({contacts, addContact}) => {
+const PhonebookForm = ({contacts, update}) => {
   const [newName, setName] = useState("");
   const updateName = e => setName(e.target.value);
   const [number, setNumber] = useState("");
   const updateNumber = e => setNumber(e.target.value);
   const submitForm = e => {
     e.preventDefault();
+    const formAction = fn => fn(newName, number).then(() => update());
     if (contacts.map(c => c.name).includes(newName)) {
-      alert(`${newName} is already in the phonebook!`);
+      const dialogue = `${newName} is already in the phonebook! Would you like to change the number to ${number}?`;
+      if (window.confirm(dialogue)) formAction(patchNumber)
     } else {
-      addContact(newName, number); 
+      formAction(postContact)
     }
   };
   return (
